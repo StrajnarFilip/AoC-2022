@@ -6,12 +6,14 @@ defmodule Day3 do
     |> String.split("\r\n")
   end
 
+  def contains_grapheme?(text, grapheme), do: Enum.member?(String.graphemes(text), grapheme)
+
   def matching_item(pair) do
     {left, right} = pair
 
     String.graphemes(left)
     |> Enum.uniq()
-    |> Enum.filter(fn x -> Enum.member?(String.graphemes(right), x) end)
+    |> Enum.filter(&contains_grapheme?(right, &1))
     |> Enum.at(0)
   end
 
@@ -20,25 +22,22 @@ defmodule Day3 do
     |> Enum.at(0)
     |> String.graphemes()
     |> Enum.uniq()
-    |> Enum.filter(fn grapheme ->
-      Enum.all?(chunk, fn x -> Enum.member?(String.graphemes(x), grapheme) end)
-    end)
+    |> Enum.filter(fn grapheme -> Enum.all?(chunk, &contains_grapheme?(&1, grapheme)) end)
     |> Enum.at(0)
   end
 
   def priority(grapheme) do
     <<code>> = grapheme
 
-    if Regex.match?(~r/[A-Z]/, grapheme) do
-      code - 38
-    else
-      code - 96
+    cond do
+      Regex.match?(~r/[A-Z]/, grapheme) -> code - 38
+      true -> code - 96
     end
   end
 
   def solution1(file_name) do
     raw_data(file_name)
-    |> Enum.map(fn x -> String.split_at(x, div(String.length(x), 2)) end)
+    |> Enum.map(fn line -> String.split_at(line, div(String.length(line), 2)) end)
     |> Enum.map(&matching_item/1)
     |> Enum.map(&priority/1)
     |> Enum.sum()
