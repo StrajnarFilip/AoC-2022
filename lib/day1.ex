@@ -1,6 +1,6 @@
 defmodule Day1 do
-  def sorted_data() do
-    {:ok, data} = File.read("day1.txt")
+  def sorted_data(file_name) do
+    {:ok, data} = File.read(file_name)
 
     data
     |> String.split("\r\n")
@@ -18,11 +18,11 @@ defmodule Day1 do
     Enum.take(input_data, 3) |> Enum.sum()
   end
 
-  def solution1() do
-    sorted_data() |> get_max
+  def solution1(file_name) do
+    sorted_data(file_name) |> get_max
   end
 
-  def solution2() do
-    sorted_data() |> get_sum_max_3
+  def solution2(file_name) do
+    sorted_data(file_name) |> get_sum_max_3
   end
 end

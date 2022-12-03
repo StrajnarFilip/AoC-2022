@@ -1,6 +1,6 @@
 defmodule Day3 do
-  def raw_data() do
-    {:ok, data} = File.read("day3.txt")
+  def raw_data(file_name) do
+    {:ok, data} = File.read(file_name)
 
     data
     |> String.split("\r\n")
@@ -18,9 +18,11 @@ defmodule Day3 do
   def matching_item_in_group(chunk) do
     chunk
     |> Enum.at(0)
-    |> String.graphemes
-    |> Enum.uniq
-    |> Enum.filter(fn grapheme -> Enum.all?(chunk,fn x -> Enum.member?(String.graphemes(x),grapheme) end) end)
+    |> String.graphemes()
+    |> Enum.uniq()
+    |> Enum.filter(fn grapheme ->
+      Enum.all?(chunk, fn x -> Enum.member?(String.graphemes(x), grapheme) end)
+    end)
     |> Enum.at(0)
   end
 
@@ -34,19 +36,19 @@ defmodule Day3 do
     end
   end
 
-  def solution1 do
-    raw_data()
+  def solution1(file_name) do
+    raw_data(file_name)
     |> Enum.map(fn x -> String.split_at(x, div(String.length(x), 2)) end)
     |> Enum.map(&matching_item/1)
     |> Enum.map(&priority/1)
-    |> Enum.sum
+    |> Enum.sum()
   end
 
-  def solution2 do
-    raw_data()
+  def solution2(file_name) do
+    raw_data(file_name)
     |> Enum.chunk_every(3)
     |> Enum.map(&matching_item_in_group/1)
     |> Enum.map(&priority/1)
-    |> Enum.sum
+    |> Enum.sum()
   end
 end

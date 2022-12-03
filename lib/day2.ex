@@ -1,6 +1,6 @@
 defmodule Day2 do
-  def raw_data() do
-    {:ok, data} = File.read("day2.txt")
+  def raw_data(file_name) do
+    {:ok, data} = File.read(file_name)
 
     data
     |> String.split("\r\n")
@@ -59,8 +59,8 @@ defmodule Day2 do
     end
   end
 
-  def solution1() do
-    raw_data()
+  def solution1(file_name) do
+    raw_data(file_name)
     |> Enum.map(fn pair ->
       %{:opponent => Enum.at(pair, 0) |> translate1, :me => Enum.at(pair, 1) |> translate1}
     end)
@@ -68,8 +68,8 @@ defmodule Day2 do
     |> Enum.sum()
   end
 
-  def solution2() do
-    raw_data()
+  def solution2(file_name) do
+    raw_data(file_name)
     |> Enum.map(fn pair ->
       %{:opponent => Enum.at(pair, 0) |> translate1, :outcome => Enum.at(pair, 1) |> translate2}
     end)
