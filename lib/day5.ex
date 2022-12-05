@@ -8,10 +8,9 @@ defmodule Day5 do
       |> List.first()
       |> String.split("\r\n")
 
-    line_length = crate_lines |> Enum.at(0) |> String.length()
     line_graphemes = crate_lines |> Enum.map(&String.graphemes(&1))
     last_line = line_graphemes |> Enum.at(Enum.count(crate_lines) - 1)
-    last_index = line_length - 1
+    last_index = String.length(crate_lines |> List.first()) - 1
 
     valid_indices =
       0..last_index
@@ -21,9 +20,9 @@ defmodule Day5 do
       line_graphemes
       |> Enum.map(fn line -> String.graphemes(get_chars(line, valid_indices)) end)
 
-    last_valid_index = Enum.count(Enum.at(full_data, 0)) - 1
+    parsed_last_index = Enum.count(Enum.at(full_data, 0)) - 1
 
-    0..last_valid_index
+    0..parsed_last_index
     |> Enum.map(&get_column(full_data, &1))
   end
 
@@ -49,79 +48,59 @@ defmodule Day5 do
     |> Enum.at(1)
     |> String.split("\r\n")
     |> Enum.map(fn line ->
-      split =
+      [move, from, to] =
         String.split(line, " ")
-        |> Enum.filter(fn x -> String.match?(x, ~r/[0-9]/) end)
-        |> Enum.map(fn x -> String.to_integer(x) end)
+        |> Enum.filter(fn symbol -> String.match?(symbol, ~r/[0-9]/) end)
+        |> Enum.map(fn symbol -> String.to_integer(symbol) end)
 
-      %{
-        move: Enum.at(split, 0),
-        from: Enum.at(split, 1),
-        to: Enum.at(split, 2)
-      }
+      %{move: move, from: from, to: to}
     end)
+  end
+
+  defp find_line(full_data, from, to) do
+    old_from =
+      full_data
+      |> Enum.filter(fn x -> String.to_integer(Enum.at(x, 0)) == from end)
+      |> List.first()
+
+    old_to =
+      full_data
+      |> Enum.filter(fn x -> String.to_integer(Enum.at(x, 0)) == to end)
+      |> List.first()
+
+    {old_from, old_to}
+  end
+
+  def map_new(line, instruction, new_to, new_from) do
+    cond do
+      String.to_integer(Enum.at(line, 0)) == instruction.to -> new_to
+      String.to_integer(Enum.at(line, 0)) == instruction.from -> new_from
+      true -> line
+    end
   end
 
   def move(full_data, instruction) do
     if instruction.move == 0 do
       full_data
     else
-      old_from =
-        full_data
-        |> Enum.filter(fn x -> String.to_integer(Enum.at(x, 0)) == instruction.from end)
-        |> List.first()
-
-      old_to =
-        full_data
-        |> Enum.filter(fn x -> String.to_integer(Enum.at(x, 0)) == instruction.to end)
-        |> List.first()
-
+      {old_from, old_to} = find_line(full_data, instruction.from, instruction.to)
       {element, new_from} = List.pop_at(old_from, -1)
       new_to = List.insert_at(old_to, -1, element)
 
-      new_full_data =
-        full_data
-        |> Enum.map(fn line ->
-          cond do
-            String.to_integer(Enum.at(line, 0)) == instruction.to -> new_to
-            String.to_integer(Enum.at(line, 0)) == instruction.from -> new_from
-            true -> line
-          end
-        end)
-
-      new_move = instruction.move - 1
-
-      move(new_full_data, %{
-        move: new_move,
-        from: instruction.from,
-        to: instruction.to
-      })
+      full_data
+      |> Enum.map(fn line -> map_new(line, instruction, new_to, new_from) end)
+      |> move(Map.replace(instruction, :move, instruction.move - 1))
     end
   end
 
   def move_multiple(full_data, instruction) do
-    old_from =
-      full_data
-      |> Enum.filter(fn x -> String.to_integer(Enum.at(x, 0)) == instruction.from end)
-      |> List.first()
-
-    old_to =
-      full_data
-      |> Enum.filter(fn x -> String.to_integer(Enum.at(x, 0)) == instruction.to end)
-      |> List.first()
+    {old_from, old_to} = find_line(full_data, instruction.from, instruction.to)
 
     moving_pile = Enum.drop(old_from, Enum.count(old_from) - instruction.move)
     new_from = Enum.take(old_from, Enum.count(old_from) - instruction.move)
     new_to = old_to ++ moving_pile
 
-    full_data
-    |> Enum.map(fn line ->
-      cond do
-        String.to_integer(Enum.at(line, 0)) == instruction.to -> new_to
-        String.to_integer(Enum.at(line, 0)) == instruction.from -> new_from
-        true -> line
-      end
-    end)
+    full_data |> Enum.map(fn line -> map_new(line, instruction, new_to, new_from) end)
   end
 
   def apply_instructions(full_data, instructions, multiple \\ false) do
@@ -130,9 +109,9 @@ defmodule Day5 do
     else
       [head | tail] = instructions
 
-      cond do
-        multiple -> apply_instructions(move_multiple(full_data, head), tail, multiple)
-        true -> apply_instructions(move(full_data, head), tail)
+      case multiple do
+        true -> apply_instructions(move_multiple(full_data, head), tail, multiple)
+        false -> apply_instructions(move(full_data, head), tail)
       end
     end
   end
