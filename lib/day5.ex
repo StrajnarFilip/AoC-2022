@@ -13,12 +13,9 @@ defmodule Day5 do
     last_index = String.length(crate_lines |> List.first()) - 1
 
     valid_indices =
-      0..last_index
-      |> Enum.filter(fn index -> String.match?(Enum.at(last_line, index), ~r/[0-9]/) end)
+      0..last_index |> Enum.filter(&String.match?(Enum.at(last_line, &1), ~r/[0-9]/))
 
-    full_data =
-      line_graphemes
-      |> Enum.map(fn line -> String.graphemes(get_chars(line, valid_indices)) end)
+    full_data = line_graphemes |> Enum.map(&String.graphemes(get_chars(&1, valid_indices)))
 
     parsed_last_index = Enum.count(Enum.at(full_data, 0)) - 1
 
