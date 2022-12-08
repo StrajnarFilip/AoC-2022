@@ -1,0 +1,5 @@
+%{
+  "json": {:hex, :json, "1.4.1", "8648f04a9439765ad449bc56a3ff7d8b11dd44ff08ffcdefc4329f7c93843dfa", [:mix], [], "hexpm", "9abf218dbe4ea4fcb875e087d5f904ef263d012ee5ed21d46e9dbca63f053d16"},
+  "qik": {:git, "https://github.com/StrajnarFilip/qik", "3d2b581bf7a62776e7a2be91f6065b1892ccb4b5", [tag: "0.0.1"]},
+  "qiko": {:git, "https://github.com/StrajnarFilip/qik", "3d2b581bf7a62776e7a2be91f6065b1892ccb4b5", [tag: "0.0.1"]},
+}
