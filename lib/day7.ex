@@ -103,7 +103,6 @@ defmodule Day7 do
 
       # Make a new treem with dirs replaced with ones that have dir_size information
       updated_dirs = Map.update(tree, "dirs", updated, fn _ -> updated end)
-      # File.write("./misc/oo#{Map.get(tree, "name")}.json", JSON.encode(updated_dirs) |> elem(1))
 
       sum =
         keys |> Enum.map(fn key -> Map.get(Map.get(updated, key), "dir_size") end) |> Enum.sum()
