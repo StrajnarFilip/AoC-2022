@@ -1,5 +1,7 @@
 %{
+  "complex": {:hex, :complex, "0.4.2", "923e5db0be13dbb3ea00cf8459d9f75f3afdd9ff5a82742ded21064330d28273", [:mix], [], "hexpm", "069a085ef820ce675a2619fd125b963ff4514af2102c7f7d7965128e5ec0a429"},
   "json": {:hex, :json, "1.4.1", "8648f04a9439765ad449bc56a3ff7d8b11dd44ff08ffcdefc4329f7c93843dfa", [:mix], [], "hexpm", "9abf218dbe4ea4fcb875e087d5f904ef263d012ee5ed21d46e9dbca63f053d16"},
+  "nx": {:hex, :nx, "0.4.1", "3cc8e420d0835ab7cac94f253950dee3ff927c68798ae88a3e4ff184a825b042", [:mix], [{:complex, "~> 0.4.2", [hex: :complex, repo: "hexpm", optional: false]}], "hexpm", "0b33fccaf76ebc6e79d53fe1149a70f99838e6505e9e7092e5a0a57b131b27c6"},
   "qik": {:git, "https://github.com/StrajnarFilip/qik", "3d2b581bf7a62776e7a2be91f6065b1892ccb4b5", [tag: "0.0.1"]},
   "qiko": {:git, "https://github.com/StrajnarFilip/qik", "3d2b581bf7a62776e7a2be91f6065b1892ccb4b5", [tag: "0.0.1"]},
 }
